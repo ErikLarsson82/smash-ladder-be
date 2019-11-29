@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const port = 3500;
 
-const players = [
+let players = [
   {
     name: 'Mattias',
     main: '?'
@@ -19,22 +19,8 @@ const players = [
     main: 'Ike'
   }
 ];
-const matches = [
-  {
-    p1: 'Mega man',
-    p2: 'Pikachu',
-    s1: 2,
-    s2: 1,
-    date: '2019-11-29T13:31:14.058Z'
-  }
-];
-const schedule = [
-  {
-    p1: 'Mega man',
-    p2: 'Yoshi',
-    date: '2019-11-29T13:31:14.058Z'
-  }
-]
+let matches = []
+let schedule = []
 
 app.use(cors());
 
@@ -47,9 +33,11 @@ app.post('/newplayer', (req, res) => {
   res.send('OK');
 });
 
-app.post('/matchplayed', (req, res) => {
-  console.log('New match', req.body)
-  matches.push(req.body)
+app.post('/resolvefight', (req, res) => {
+  console.log('Match resolved', req.body)
+  const match = req.body
+  schedule = schedule.filter(({p1, p2}) => match.p1 === p1 && match.p2 === p2)
+  matches.push(match)
   res.send('OK');
 })
 
