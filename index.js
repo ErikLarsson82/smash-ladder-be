@@ -5,29 +5,56 @@ const cors = require('cors');
 const app = express();
 const port = 3500;
 
-// Where we will keep books
-let books = [];
+const players = [
+  {
+    name: 'Mattias',
+    main: '?'
+  },
+  {
+    name: 'Batsis',
+    main: 'Pikachu'
+  },
+  {
+    name: 'Stenberg',
+    main: 'Ike'
+  }
+];
+const matches = [
+  {
+    p1: 'Mega man',
+    p2: 'Pikachu',
+    s1: 2,
+    s2: 1,
+    date: '2019-11-29T13:31:14.058Z'
+  }
+];
+const schedule = [
+  {
+    p1: 'Mega man',
+    p2: 'Yoshi',
+    date: '2019-11-29T13:31:14.058Z'
+  }
+]
 
 app.use(cors());
 
-// Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const savebook = (req, res) => {
-  //const book = req.body;
-
-  books.push({ name: Math.random() });
-
-  res.send('Book is added to the database');
-}
-
-app.get('/savebook', savebook);
-
-app.get('/book', (req, res) => {
-
-  console.log('Fetching books');
-  res.json(books);
+app.post('/newplayer', (req, res) => {
+  console.log('New player', req.body)
+  players.push(req.body)
+  res.send('OK');
 });
 
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
+app.post('/matchplayed', (req, res) => {
+  console.log('New match', req.body)
+  matches.push(req.body)
+  res.send('OK');
+})
+
+app.get('/players', (req, res) => res.json(players));
+app.get('/matches', (req, res) => res.json(matches));
+app.get('/schedule', (req, res) => res.json(schedule));
+
+app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`));
