@@ -2,23 +2,12 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const playersJSON = require('./players.json')
+
 const app = express();
 const port = 3500;
 
-let players = [
-  {
-    name: 'Mattias',
-    main: '?'
-  },
-  {
-    name: 'Batsis',
-    main: 'Pikachu'
-  },
-  {
-    name: 'Stenberg',
-    main: 'Ike'
-  }
-];
+let players = playersJSON
 let matches = []
 let schedule = []
 

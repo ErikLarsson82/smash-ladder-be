@@ -1,0 +1,107 @@
+[
+  {
+    "name":"Mattias Bäckström",
+    "main":"Shulk",
+    "secondary":"Lucas"
+  },
+  {
+    "name":"Jimmy Hytonen",
+    "main":"Joker",
+    "secondary": "Bowser"
+  },
+  {
+    "name":"Viktor Kraft",
+    "main":"Peach",
+    "secondary": "Daisy"
+  },
+  {
+    "name":"Emil Westenius",
+    "main":"Yoshi",
+    "secondary": "Lucina"
+  },
+  {
+    "name":"David Forssell",
+    "main":"Roy",
+    "secondary": "Captain Falcon"
+  },
+  {
+    "name":"Pontus Fransson",
+    "main":"Young Link",
+    "secondary": null
+  },
+  {
+    "name":"Alexander Batsis",
+    "main":"Pikachu",
+    "secondary": "Lucina"
+  },
+  {
+    "name":"Victor Tuomola",
+    "main":"Joker",
+    "secondary": null
+  },
+  {
+    "name":"Erik Larsson",
+    "main":"Mega Man",
+    "secondary": null
+  },
+  {
+    "name":"Mikael Stenberg",
+    "main":"Ike",
+    "secondary": "Random"
+  },
+  {
+    "name":"Dimitris Thanasis",
+    "main":"Corrin",
+    "secondary": null
+  },
+  {
+    "name":"Martin Kustvall",
+    "main":"Link",
+    "secondary": null
+  },
+  {
+    "name":"Kalle Lindblom",
+    "main":"Mario",
+    "secondary": null
+  },
+  {
+    "name":"Mikael Carlén",
+    "main":"Corrin",
+    "secondary": null
+  },
+  {
+    "name":"Markus Hedvall",
+    "main":"Ness",
+    "secondary": null
+  },
+  {
+    "name":"Patrik Beijar",
+    "main":"Cloud",
+    "secondary": "Pit"
+  },
+  {
+    "name":"Victor Lövgren",
+    "main":"Young Link",
+    "secondary": null
+  },
+  {
+    "name":"Baran Hiwakader",
+    "main":"Ridly",
+    "secondary": null
+  },
+  {
+    "name":"Jonas Johansson",
+    "main":"Bowser",
+    "secondary": "King K. Krool"
+  },
+  {
+    "name":"Stefan Nygren",
+    "main":"Palutena",
+    "secondary": null
+  },
+  {
+    "name":"Ebba Palenius",
+    "main":"Young Link",
+    "secondary": null
+  }
+]
