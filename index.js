@@ -20,7 +20,7 @@ let players = [
   }
 ];
 let matches = []
-let schedule = [{ p1: 'batsis', p2: 'stenberg', date: new Date().toISOString() }]
+let schedule = []
 
 app.use(cors());
 
