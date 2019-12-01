@@ -2,106 +2,127 @@
   {
     "name":"Mattias Bäckström",
     "main":"Shulk",
-    "secondary":"Lucas"
+    "secondary":"Lucas",
+    "qc": [1]
   },
   {
     "name":"Jimmy Hytonen",
     "main":"Joker",
-    "secondary": "Bowser"
+    "secondary": "Bowser",
+    "qc": [2]
   },
   {
     "name":"Viktor Kraft",
     "main":"Peach",
-    "secondary": "Daisy"
+    "secondary": "Daisy",
+    "qc": [3]
   },
   {
     "name":"Emil Westenius",
     "main":"Yoshi",
-    "secondary": "Lucina"
+    "secondary": "Lucina",
+    "qc": []
   },
   {
     "name":"David Forssell",
     "main":"Roy",
-    "secondary": "Captain Falcon"
+    "secondary": "Captain Falcon",
+    "qc": []
   },
   {
     "name":"Pontus Fransson",
     "main":"Young Link",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Alexander Batsis",
     "main":"Pikachu",
-    "secondary": "Lucina"
+    "secondary": "Lucina",
+    "qc": []
   },
   {
     "name":"Victor Tuomola",
     "main":"Joker",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Erik Larsson",
     "main":"Mega Man",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Mikael Stenberg",
     "main":"Ike",
-    "secondary": "Random"
+    "secondary": "Random",
+    "qc": []
   },
   {
     "name":"Dimitris Thanasis",
     "main":"Corrin",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Martin Kustvall",
     "main":"Link",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Kalle Lindblom",
     "main":"Mario",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Mikael Carlén",
     "main":"Corrin",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Markus Hedvall",
     "main":"Ness",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Patrik Beijar",
     "main":"Cloud",
-    "secondary": "Pit"
+    "secondary": "Pit",
+    "qc": []
   },
   {
     "name":"Victor Lövgren",
     "main":"Young Link",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Baran Hiwakader",
     "main":"Ridly",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Jonas Johansson",
     "main":"Bowser",
-    "secondary": "King K. Krool"
+    "secondary": "King K. Krool",
+    "qc": []
   },
   {
     "name":"Stefan Nygren",
     "main":"Palutena",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   },
   {
     "name":"Ebba Palenius",
     "main":"Young Link",
-    "secondary": null
+    "secondary": null,
+    "qc": []
   }
 ]
