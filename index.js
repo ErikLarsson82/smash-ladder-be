@@ -1,15 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
 
-const playersJSON = require('./players.json')
+let players = require('./players.json')
+let matches = require('./matches.json')
+let schedule = require('./schedule.json')
 
 const app = express();
 const port = 3500;
-
-let players = playersJSON
-let matches = []
-let schedule = []
 
 app.use(cors());
 
@@ -20,6 +19,7 @@ app.post('/newplayer', (req, res) => {
   console.log('New player', req.body)
   players.push(req.body)
   res.send('OK');
+  fs.writeFileSync('players.json', players);
 });
 
 app.post('/resolvefight', (req, res) => {
@@ -28,6 +28,9 @@ app.post('/resolvefight', (req, res) => {
   schedule = schedule.filter(({p1, p2}) => match.p1 === p1 && match.p2 === p2)
   matches.push(match)
   res.send('OK');
+  fs.writeFileSync('schedule.json', JSON.stringify(schedule));
+  fs.writeFileSync('matches.json', JSON.stringify(matches));
+
 })
 
 app.get('/players', (req, res) => res.json(players));

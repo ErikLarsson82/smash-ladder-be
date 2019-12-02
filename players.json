@@ -9,7 +9,7 @@
     "name":"Jimmy Hytonen",
     "main":"Joker",
     "secondary": "Bowser",
-    "qc": [2]
+    "qc": [2, 1]
   },
   {
     "name":"Viktor Kraft",
@@ -110,7 +110,7 @@
   {
     "name":"Jonas Johansson",
     "main":"Bowser",
-    "secondary": "King K. Krool",
+    "secondary": "King K. Rool",
     "qc": []
   },
   {
