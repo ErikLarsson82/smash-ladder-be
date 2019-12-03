@@ -19,7 +19,14 @@ app.post('/newplayer', (req, res) => {
   console.log('New player', req.body)
   players.push(req.body)
   res.send('OK');
-  fs.writeFileSync('players.json', players);
+  fs.writeFileSync('players.json', JSON.stringify(players));
+});
+
+app.post('/schedulefight', (req, res) => {
+  console.log('New scheduled game', req.body)
+  schedule.push(req.body)
+  res.send('OK');
+  fs.writeFileSync('schedule.json', JSON.stringify(schedule));
 });
 
 app.post('/resolvefight', (req, res) => {
