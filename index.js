@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
 
+const resolveLadder = require('./resolveLadder')
 let players = require('./players.json')
 let matches = require('./matches.json')
 let schedule = require('./schedule.json')
@@ -32,11 +33,15 @@ app.post('/schedulefight', (req, res) => {
 app.post('/resolvefight', (req, res) => {
   console.log('Match resolved', req.body)
   const match = req.body
-  schedule = schedule.filter( ({p1slug, p2slug}) => !((match.p1slug === p1slug) && (match.p2slug === p2slug)) )
+  schedule = schedule.filter(
+    ({p1slug, p2slug}) => !((match.p1slug === p1slug) && (match.p2slug === p2slug))
+  )
   matches.push(match)
+  players = resolveLadder(players, match)
   res.send('OK')
   fs.writeFileSync('schedule.json', JSON.stringify(schedule))
   fs.writeFileSync('matches.json', JSON.stringify(matches))
+  fs.writeFileSync('players.json', JSON.stringify(players))
 
 })
 
