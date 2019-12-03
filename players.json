@@ -1,128 +1,192 @@
 [
-  {
-    "name":"Mattias Bäckström",
-    "main":"Shulk",
-    "secondary":"Lucas",
-    "qc": [1]
-  },
-  {
-    "name":"Jimmy Hytonen",
-    "main":"Joker",
-    "secondary": "Bowser",
-    "qc": [2, 1]
-  },
-  {
-    "name":"Viktor Kraft",
-    "main":"Peach",
-    "secondary": "Daisy",
-    "qc": [3]
-  },
-  {
-    "name":"Emil Westenius",
-    "main":"Yoshi",
-    "secondary": "Lucina",
-    "qc": []
-  },
-  {
-    "name":"David Forssell",
-    "main":"Roy",
-    "secondary": "Captain Falcon",
-    "qc": []
-  },
-  {
-    "name":"Pontus Fransson",
-    "main":"Young Link",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Alexander Batsis",
-    "main":"Pikachu",
-    "secondary": "Lucina",
-    "qc": []
-  },
-  {
-    "name":"Victor Tuomola",
-    "main":"Joker",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Erik Larsson",
-    "main":"Mega Man",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Mikael Stenberg",
-    "main":"Ike",
-    "secondary": "Random",
-    "qc": []
-  },
-  {
-    "name":"Dimitris Thanasis",
-    "main":"Corrin",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Martin Kustvall",
-    "main":"Link",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Kalle Lindblom",
-    "main":"Mario",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Mikael Carlén",
-    "main":"Corrin",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Markus Hedvall",
-    "main":"Ness",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Patrik Beijar",
-    "main":"Cloud",
-    "secondary": "Pit",
-    "qc": []
-  },
-  {
-    "name":"Victor Lövgren",
-    "main":"Young Link",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Baran Hiwakader",
-    "main":"Ridly",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Jonas Johansson",
-    "main":"Bowser",
-    "secondary": "King K. Rool",
-    "qc": []
-  },
-  {
-    "name":"Stefan Nygren",
-    "main":"Palutena",
-    "secondary": null,
-    "qc": []
-  },
-  {
-    "name":"Ebba Palenius",
-    "main":"Young Link",
-    "secondary": null,
-    "qc": []
-  }
+   {
+      "name":"Mattias Bäckström",
+      "main":"Shulk",
+      "secondary":"Lucas",
+      "qc":[
+         1
+      ],
+      "playerslug":"mattias-backstrom"
+   },
+   {
+      "name":"Jimmy Hytonen",
+      "main":"Joker",
+      "secondary":"Bowser",
+      "qc":[
+         2,
+         1
+      ],
+      "playerslug":"jimmy-hytonen"
+   },
+   {
+      "name":"Viktor Kraft",
+      "main":"Peach",
+      "secondary":"Daisy",
+      "qc":[
+         3
+      ],
+      "playerslug":"viktor-kraft"
+   },
+   {
+      "name":"Emil Westenius",
+      "main":"Yoshi",
+      "secondary":"Lucina",
+      "qc":[
+
+      ],
+      "playerslug":"emil-westenius"
+   },
+   {
+      "name":"David Forssell",
+      "main":"Roy",
+      "secondary":"Captain Falcon",
+      "qc":[
+
+      ],
+      "playerslug":"david-forssell"
+   },
+   {
+      "name":"Pontus Fransson",
+      "main":"Young Link",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"pontus-fransson"
+   },
+   {
+      "name":"Alexander Batsis",
+      "main":"Pikachu",
+      "secondary":"Lucina",
+      "qc":[
+
+      ],
+      "playerslug":"alexander-batsis"
+   },
+   {
+      "name":"Victor Tuomola",
+      "main":"Joker",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"victor-tuomola"
+   },
+   {
+      "name":"Erik Larsson",
+      "main":"Mega Man",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"erik-larsson"
+   },
+   {
+      "name":"Mikael Stenberg",
+      "main":"Ike",
+      "secondary":"Random",
+      "qc":[
+
+      ],
+      "playerslug":"mikael-stenberg"
+   },
+   {
+      "name":"Dimitris Thanasis",
+      "main":"Corrin",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"dimitris-thanasis"
+   },
+   {
+      "name":"Martin Kustvall",
+      "main":"Link",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"martin-kustvall"
+   },
+   {
+      "name":"Kalle Lindblom",
+      "main":"Mario",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"kalle-lindblom"
+   },
+   {
+      "name":"Mikael Carlén",
+      "main":"Corrin",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"mikael-carlén"
+   },
+   {
+      "name":"Markus Hedvall",
+      "main":"Ness",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"markus-hedvall"
+   },
+   {
+      "name":"Patrik Beijar",
+      "main":"Cloud",
+      "secondary":"Pit",
+      "qc":[
+
+      ],
+      "playerslug":"patrik-beijar"
+   },
+   {
+      "name":"Victor Lövgren",
+      "main":"Young Link",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"victor-lovgren"
+   },
+   {
+      "name":"Baran Hiwakader",
+      "main":"Ridly",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"baran-hiwakader"
+   },
+   {
+      "name":"Jonas Johansson",
+      "main":"Bowser",
+      "secondary":"King K. Rool",
+      "qc":[
+
+      ],
+      "playerslug":"jonas-johansson"
+   },
+   {
+      "name":"Stefan Nygren",
+      "main":"Palutena",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"stefan-nygren"
+   },
+   {
+      "name":"Ebba Palenius",
+      "main":"Young Link",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"ebba-palenius"
+   }
 ]
