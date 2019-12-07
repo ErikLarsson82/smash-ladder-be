@@ -3,6 +3,12 @@
 Backend code for https://github.com/ErikLarsson82/smash-ladder-fe<br />
 
 Deployed at https://hiqombo-ladder.herokuapp.com/<br />
+API:
+/players<br />
+/matches<br />
+/schedule<br />
+/schedulefight<br />
+/resolvefight<br />
 
 JSON files acts like a database containing all players, matches and schedule.<br />
 
