@@ -1,4 +1,4 @@
-##HiQombo Smash Ultimate Ladder - Backend REST API<br />
+## HiQombo Smash Ultimate Ladder - Backend REST API<br />
 
 Backend code for https://github.com/ErikLarsson82/smash-ladder-fe<br />
 
