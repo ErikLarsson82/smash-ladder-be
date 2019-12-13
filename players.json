@@ -27,15 +27,6 @@
       "playerslug":"viktor-kraft"
    },
    {
-      "name":"David Forssell",
-      "main":"Roy",
-      "secondary":"Captain Falcon",
-      "qc":[
-
-      ],
-      "playerslug":"david-forssell"
-   },
-   {
       "name":"Emil Westenius",
       "main":"Yoshi",
       "secondary":"Lucina",
@@ -54,13 +45,13 @@
       "playerslug":"alexander-batsis"
    },
    {
-      "name":"Pontus Fransson",
-      "main":"Young Link",
-      "secondary":null,
+      "name":"David Forssell",
+      "main":"Roy",
+      "secondary":"Captain Falcon",
       "qc":[
 
       ],
-      "playerslug":"pontus-fransson"
+      "playerslug":"david-forssell"
    },
    {
       "name":"Dimitris Thanasis",
@@ -72,6 +63,15 @@
       "playerslug":"dimitris-thanasis"
    },
    {
+      "name":"Kalle Lindblom",
+      "main":"Mario",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"kalle-lindblom"
+   },
+   {
       "name":"Erik Larsson",
       "main":"Mega Man",
       "secondary":null,
@@ -81,6 +81,15 @@
       "playerslug":"erik-larsson"
    },
    {
+      "name":"Pontus Fransson",
+      "main":"Young Link",
+      "secondary":null,
+      "qc":[
+
+      ],
+      "playerslug":"pontus-fransson"
+   },
+   {
       "name":"Victor Tuomola",
       "main":"Joker",
       "secondary":null,
@@ -88,15 +97,6 @@
 
       ],
       "playerslug":"victor-tuomola"
-   },
-   {
-      "name":"Kalle Lindblom",
-      "main":"Mario",
-      "secondary":null,
-      "qc":[
-
-      ],
-      "playerslug":"kalle-lindblom"
    },
    {
       "name":"Martin Kustvall",
