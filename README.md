@@ -4,7 +4,7 @@ Backend code for https://github.com/ErikLarsson82/smash-ladder-fe<br />
 
 Deployed at https://hiqombo-ladder.herokuapp.com/<br />
 
-WARNING. If you deploy new code without running bash script update.sh, you will overwrite the volatie JSON lists on the server.<br />
+### Caution! If you deploy new code without running bash script update.sh and push-commit.sh, you will overwrite the volatie JSON lists on the server.<br />
 The update-script downloads all JSON files and pushes the changes.<br/>
 
 API:<br />
