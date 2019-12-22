@@ -9,7 +9,7 @@ let matches = require('./matches.json')
 let schedule = require('./schedule.json')
 
 const app = express()
-const port = process.env.PORT
+const port = process.env.PORT || 80
 
 app.use(cors())
 

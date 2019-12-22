@@ -10,21 +10,24 @@ module.exports = function resolveLadder(players, match) {
       loser: match.p1slug,
     }
 
-  console.log('winner', obj)
-
   const winnerTargetIdx = players.findIndex(({playerslug}) => playerslug === obj.winner)
   const loserTargetIdx = players.findIndex(({playerslug}) => playerslug === obj.loser)
 
+  const diff = Math.max(winnerTargetIdx, loserTargetIdx) - Math.min(winnerTargetIdx, loserTargetIdx)
+
+  players[winnerTargetIdx].trend = 0
+  players[loserTargetIdx].trend = 0
+
   if (winnerTargetIdx < loserTargetIdx) return players
+
+  players[winnerTargetIdx].trend = diff
+  players[loserTargetIdx].trend = diff * -1
 
   players = players.map(x=>x)
 
   let temp = players[winnerTargetIdx]
   players[winnerTargetIdx] = players[loserTargetIdx]
   players[loserTargetIdx] = temp
-
-  console.log('winner idx', winnerTargetIdx)
-  console.log('loserTargetIdx idx', loserTargetIdx)
 
   return players
 }
