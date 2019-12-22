@@ -41,7 +41,9 @@ app.post('/resolvefight', (req, res) => {
   matches.push({
     ...match,
     p1trend: result.p1trend,
-    p2trend: result.p2trend
+    p2trend: result.p2trend,
+    p1preGameIdx: result.p1preGameIdx,
+    p2preGameIdx: result.p2preGameIdx
   })
   res.send('OK')
   fs.writeFileSync('schedule.json', JSON.stringify(schedule))

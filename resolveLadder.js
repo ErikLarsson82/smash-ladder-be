@@ -10,6 +10,9 @@ module.exports = function resolveLadder(players, match) {
       loser: match.p1slug,
     }
 
+  const p1preGameIdx = players.findIndex(({playerslug}) => playerslug === match.p1slug)
+  const p2preGameIdx = players.findIndex(({playerslug}) => playerslug === match.p2slug)
+
   const winnerTargetIdx = players.findIndex(({playerslug}) => playerslug === obj.winner)
   const loserTargetIdx = players.findIndex(({playerslug}) => playerslug === obj.loser)
 
@@ -22,7 +25,9 @@ module.exports = function resolveLadder(players, match) {
     return {
       players: players,
       p1trend: 0,
-      p2trend: 0
+      p2trend: 0,
+      p1preGameIdx: p1preGameIdx,
+      p2preGameIdx: p2preGameIdx
     }
   }
 
@@ -38,6 +43,8 @@ module.exports = function resolveLadder(players, match) {
   return {
     players: players,
     p1trend: diff,
-    p2trend: diff * -1
+    p2trend: diff * -1,
+    p1preGameIdx: p1preGameIdx,
+    p2preGameIdx: p2preGameIdx
   }
 }
