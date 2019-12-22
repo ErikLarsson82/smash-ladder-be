@@ -36,8 +36,13 @@ app.post('/resolvefight', (req, res) => {
   schedule = schedule.filter(
     ({p1slug, p2slug}) => !((match.p1slug === p1slug) && (match.p2slug === p2slug))
   )
-  matches.push(match)
-  players = resolveLadder(players, match)
+  const result = resolveLadder(players, match)
+  players = result.players
+  matches.push({
+    ...match,
+    p1trend: result.p1trend,
+    p2trend: result.p2trend
+  })
   res.send('OK')
   fs.writeFileSync('schedule.json', JSON.stringify(schedule))
   fs.writeFileSync('matches.json', JSON.stringify(matches))

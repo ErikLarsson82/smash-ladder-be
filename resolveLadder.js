@@ -18,7 +18,13 @@ module.exports = function resolveLadder(players, match) {
   players[winnerTargetIdx].trend = 0
   players[loserTargetIdx].trend = 0
 
-  if (winnerTargetIdx < loserTargetIdx) return players
+  if (winnerTargetIdx < loserTargetIdx) {
+    return {
+      players: players,
+      p1trend: 0,
+      p2trend: 0
+    }
+  }
 
   players[winnerTargetIdx].trend = diff
   players[loserTargetIdx].trend = diff * -1
@@ -29,5 +35,9 @@ module.exports = function resolveLadder(players, match) {
   players[winnerTargetIdx] = players[loserTargetIdx]
   players[loserTargetIdx] = temp
 
-  return players
+  return {
+    players: players,
+    p1trend: diff,
+    p2trend: diff * -1
+  }
 }
