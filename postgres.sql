@@ -30,3 +30,12 @@ INSERT INTO players (name, playerslug, main, secondary, trend, qc)
 ('Stefan Nygren', 'stefan-nygren', 'Palutena', NULL, 0, '{}'),
 ('Jimmy Hytonen', 'jimmy-hytonen', 'Joker', 'Bowser', 0, '{}'),
 ('Ebba Palenius', 'ebba-palenius', 'Young Link', NULL, 0, '{}');
+
+
+CREATE TABLE schedule (
+    ps1slug         text,
+    ps2slug         text,
+    date            text
+);
+
+[{"p1slug":"markus-hedvall","p2slug":"patrik-beijar","date":"2019-12-24T20:48:41.892Z"}]

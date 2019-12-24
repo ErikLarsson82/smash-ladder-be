@@ -8,26 +8,31 @@ let players = require('./players.json')
 let matches = require('./matches.json')
 let schedule = require('./schedule.json')
 
+const Pool = require('pg').Pool
+const pool = new Pool({
+  user: 'me',
+  host: 'localhost',
+  database: 'hiqombo',
+  password: 'password',
+  port: 2800,
+})
+
 const app = express()
-const port = process.env.PORT || 80
+const port = process.env.PORT || 1337
 
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.post('/newplayer', (req, res) => {
-  console.log('New player', req.body)
-  players.push(req.body)
-  res.send('OK')
-  fs.writeFileSync('players.json', JSON.stringify(players))
-})
-
-app.post('/schedulefight', (req, res) => {
-  console.log('New scheduled game', req.body)
-  schedule.push(req.body)
-  res.send('OK')
-  fs.writeFileSync('schedule.json', JSON.stringify(schedule))
+app.post('/schedulefight', (request, response) => {
+  const { p1slug, p2slug, date } = request.body
+  console.log('New scheduled game', request.body)
+  const sql = `INSERT INTO schedule (ps1slug, ps2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
+  pool.query(sql, (err, result) => {
+    if (err) console.error(err, result)
+    response.status(201).send()
+  })
 })
 
 app.post('/resolvefight', (req, res) => {
@@ -52,7 +57,15 @@ app.post('/resolvefight', (req, res) => {
 
 })
 
-app.get('/players', (req, res) => res.json(players))
+app.get('/players', (req, response) => {
+  pool.query('SELECT * FROM players', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(200).json(results.rows)
+  })
+})
+
 app.get('/matches', (req, res) => res.json(matches))
 app.get('/schedule', (req, res) => res.json(schedule))
 
