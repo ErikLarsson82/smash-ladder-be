@@ -5,17 +5,18 @@ const fs = require('fs')
 
 require('dotenv').config()
 
-const ssl = process.env.DISABLE_SSL ? { ssl: false } : { ssl: true }
+const ssl = process.env.DISABLE_SSL === 'DISABLED' ? false : true
 
 const config = {
   user: 'user_name',
-  host: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL,
   port: process.env.PORT || 2800,
   database: 'database_name',
   password: 'password',
-  ...ssl
+  ssl: ssl
 }
-console.log('config', config)
+
+console.log('config', config, process.env.DISABLE_SSL)
 
 const Pool = require('pg').Pool
 const pool = new Pool(config)
