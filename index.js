@@ -87,23 +87,24 @@ function swapRanks(result) {
     return Promise.all([getPlayer(p1slug), getPlayer(p2slug)])
       .then(players => {
         const p1win = result.filter(x => x === 'p1').length > result.filter(x => x === 'p2').length
-        const swap = (players[0].rank > players[1].rank && p1win) || (players[0].rank < players[1].rank && !p1win)
+        const p1onTop = players[0].rank > players[1].rank
+        const swap = (p1onTop && p1win) || (!p1onTop && !p1win)
+        const diff = p1onTop ? players[1].rank - players[0].rank : players[0].rank - players[1].rank
+
         if (swap) {
-          console.log('lets swap')
-          return updateRank(p1slug, players[1].rank)
-            .then(() => updateRank(p2slug, players[0].rank))
-            .then(() => console.log('done'))
+          return updatePlayer(p1slug, diff * (p1win ? -1 : 1), players[1].rank)
+            .then(() => updatePlayer(p2slug, diff * (p1win ? 1 : -1), players[0].rank))
         } else {
-          console.log('nothing ever happens', result, p1win, players[0].rank, players[1].rank)
-          return null
+          return updatePlayer(p1slug, 0, players[0].rank)
+            .then(() => updatePlayer(p2slug, 0, players[1].rank))
         }
       })
   }
 }
 
-function updateRank(slug, rank) {
+function updatePlayer(slug, diff, rank) {
   return new Promise((resolve, reject) => {
-    const sql = `UPDATE players SET rank = ${rank} WHERE playerslug = '${slug}';`
+    const sql = `UPDATE players SET rank = ${rank}, trend = ${diff} WHERE playerslug = '${slug}';`
     pool.query(sql, (error, results) => {
       if (error) console.error(error)
       console.log('updated', slug, rank, results)
