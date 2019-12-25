@@ -24,4 +24,4 @@ Deploy to heroku<br />
 
 ### Caution! If you clone, build and deploy you will overwrite the current ladder
 
-Work in progress is migration to permanent storage using Postgres.
+Work in progress is migration to permanent storage using Postgres 11.6
