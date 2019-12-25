@@ -45,7 +45,9 @@ app.post('/resolvefight', (request, response) => {
       Promise.all([
         deleteScheduleById(id),
         addMatch({ p1slug, p2slug, date, result, p1trend, p2trend, p1prerank, p2prerank})
-      ].concat( p1trend !== 0 ? swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend }) : []))
+      ].concat( p1trend !== 0
+          ? swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
+          : resetTrends(p1slug, p2slug) ))
         .then(() => response.status(200).send())
     })
 })
@@ -107,10 +109,25 @@ function swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend }) {
   ])
 }
 
+function resetTrends(p1slug, p2slug) {
+  return Promise.all([
+    updateTrend(p1slug, 0),
+    updateTrend(p2slug, 0)
+  ])
+}
+
+function updateTrend(slug, trend) {
+  return new Promise((resolve, reject) => {
+    pool.query(`UPDATE players SET trend = ${trend} WHERE playerslug = '${slug}';`, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
 function updatePlayer(slug, rank, trend) {
   return new Promise((resolve, reject) => {
-    const sql = `UPDATE players SET rank = ${rank}, trend = ${trend} WHERE playerslug = '${slug}';`
-    pool.query(sql, (error, results) => {
+    pool.query(`UPDATE players SET rank = ${rank}, trend = ${trend} WHERE playerslug = '${slug}';`, (error, results) => {
       if (error) console.error(error)
       resolve()
     })
