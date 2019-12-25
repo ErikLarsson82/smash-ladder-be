@@ -35,7 +35,6 @@ app.post('/schedulefight', (request, response) => {
 function findScheduleById(id) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT * FROM schedule WHERE id = ${id};`
-    console.log('sql', sql)
     pool.query(sql, (error, results) => {
       if (error) console.error(error)
       resolve(results.rows[0])
@@ -44,10 +43,14 @@ function findScheduleById(id) {
 }
 
 function deleteScheduleById(match) {
+  console.log('deleteScheduleById', match)
   const { id } = match
   return new Promise((resolve, reject) => {
-    pool.query(`DELETE FROM schedule WHERE id = ${id};`, (error, results) => {
+    const sql = `DELETE FROM schedule WHERE id = ${id};`
+    console.log(sql)
+    pool.query(sql, (error, results) => {
       if (error) console.error(error)
+      console.log('done', match)
       resolve(match)
     })
   })
@@ -55,25 +58,74 @@ function deleteScheduleById(match) {
 
 function addMatch(result) {
   return match => {
-    console.log(result, match)
+    console.log('addMatch', result, match)
     const { p1slug, p2slug, date, id } = match
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO matches (p1slug, p2slug, date, result, p1trend, p2trend, p1preGameIdx, p2preGameIdx) VALUES ('${p1slug}', '${p2slug}', '${date}', '{${result.map(x=>`"${x}"`).join(',')}}', 0, 0, 0, 0);`
-      console.log('sql', sql)
       pool.query(sql, (error, results) => {
         if (error) console.error(error)
-        resolve()
+        console.log('done')
+        resolve({ p1slug: p1slug, p2slug: p2slug})
       })
     })
   }
 }
 
+function getPlayer(slug) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM players WHERE playerslug = '${slug}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve(results.rows[0])
+    })
+  })
+}
+
+function swapRanks(result) {
+  return ({ p1slug, p2slug }) => {
+    console.log('swapRanks', result, p1slug, p2slug)
+    return Promise.all([getPlayer(p1slug), getPlayer(p2slug)])
+      .then(players => {
+        const p1win = result.filter(x => x === 'p1').length > result.filter(x => x === 'p2').length
+        const swap = (players[0].rank > players[1].rank && p1win) || (players[0].rank < players[1].rank && !p1win)
+        if (swap) {
+          console.log('lets swap')
+          return updateRank(p1slug, players[1].rank)
+            .then(() => updateRank(p2slug, players[0].rank))
+            .then(() => console.log('done'))
+        } else {
+          console.log('nothing ever happens', result, p1win, players[0].rank, players[1].rank)
+          return null
+        }
+      })
+  }
+}
+
+function updateRank(slug, rank) {
+  return new Promise((resolve, reject) => {
+    const sql = `UPDATE players SET rank = ${rank} WHERE playerslug = '${slug}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      console.log('updated', slug, rank, results)
+      resolve()
+    })
+  })
+}
+
+app.get('/tmp', (request, response) => {
+  swapRanks(['p1', 'p1'])('mikael-carlen', 'viktor-kraft')
+  response.status(200).send()
+})
+
 app.post('/resolvefight', (request, response) => {
   console.log('Match resolved', request.body)
 
+  const result = request.body.result
+
   findScheduleById(request.body.id)
     .then(deleteScheduleById)
-    .then(addMatch(request.body.result))
+    .then(addMatch(result))
+    .then(swapRanks(result))
     .then(() => response.status(200).send())
 
   /*
@@ -107,6 +159,7 @@ function select(api) {
     })
   }
 }
+
 app.get('/players', select('players'))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
