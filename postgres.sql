@@ -53,8 +53,8 @@ CREATE TABLE matches (
     result text[],
     p1trend integer,
     p2trend integer,
-    p1preGameIdx integer,
-    p2preGameIdx integer
+    p1prerank integer,
+    p2prerank integer
 );
 
 
