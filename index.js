@@ -3,13 +3,18 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
 
+require('dotenv').config()
+
+const ssl = process.env.DISABLE_SSL ? { ssl: false } : { ssl: true }
+
 const Pool = require('pg').Pool
 const pool = new Pool({
   user: 'user_name',
-  host: 'localhost',
+  host: process.env.DATABASE_URL,
+  port: process.env.PORT || 2800,
   database: 'database_name',
   password: 'password',
-  port: 2800,
+  ...ssl
 })
 
 const app = express()
