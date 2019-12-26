@@ -2,6 +2,8 @@ DROP TABLE players;
 DROP TABLE schedule;
 DROP TABLE matches;
 
+SET CLIENT_ENCODING TO 'utf8';
+
 CREATE TABLE players (
     id              serial PRIMARY KEY,
     name            text,
@@ -22,7 +24,7 @@ INSERT INTO players (name, playerslug, main, secondary, trend, qc, rank)
 ('Patrik Beijar', 'patrik-beijar', 'Cloud', 'Pit', 0, '{}', 5),
 ('Markus Hedvall', 'markus-hedvall', 'Ness', NULL, 0, '{}', 6),
 ('David Forssell', 'david-forssell', 'Roy', 'Captain Falcon', 0, '{}', 7),
-('Mattias Bäckström', 'mattias-backstrom', 'Shulk', 'Lucas', 0, '{}', 8),
+('Mattias%20B%E4ckstr%F6m', 'mattias-backstrom', 'Shulk', 'Lucas', 0, '{}', 8),
 ('Erik Larsson', 'erik-larsson', 'Mega Man', NULL, 0, '{}', 9),
 ('Dimitris Thanasis', 'dimitris-thanasis', 'Corrin', NULL, 0, '{}', 10),
 ('Victor Tuomola', 'victor-tuomola', 'Joker', NULL, 0, '{}', 11),
@@ -30,7 +32,7 @@ INSERT INTO players (name, playerslug, main, secondary, trend, qc, rank)
 ('Kalle Lindblom', 'kalle-lindblom', 'Mario', NULL, 0, '{}', 13),
 ('Emil Westenius', 'emil-westenius', 'Yoshi', 'Lucina', 0, '{}', 14),
 ('Martin Kustvall', 'martin-kustvall', 'Link', NULL, 0, '{}', 15),
-('Victor Lövgren', 'victor-lovgren', 'Young Link', NULL, 0, '{}', 16),
+('Victor%20L%F6vgren', 'victor-lovgren', 'Young Link', NULL, 0, '{}', 16),
 ('Baran Hiwakader', 'baran-hiwakader', 'Ridly', NULL, 0, '{}', 17),
 ('Jonas Johansson', 'jonas-johansson', 'Bowser', 'King K. Rool', 0, '{}', 18),
 ('Stefan Nygren', 'stefan-nygren', 'Palutena', NULL, 0, '{}', 19),

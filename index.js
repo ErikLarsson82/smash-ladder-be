@@ -57,7 +57,7 @@ app.post('/resolvefight', (request, response) => {
     })
 })
 
-app.get('/players', select('players'))
+app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
 
@@ -140,7 +140,6 @@ function updatePlayer(slug, rank, trend) {
 }
 
 /* resolveMatch - Determine who trends how */
-// Example
 // JSON.stringify(resolveMatch(3,5, ['p1', 'p1']) === JSON.stringify({p1trend: 0, p2trend: 0})
 // JSON.stringify(resolveMatch(3,5, ['p2', 'p2']) === JSON.stringify({p1trend: -2, p2trend: 2})
 // JSON.stringify(resolveMatch(5,3, ['p1', 'p1']) === JSON.stringify({p1trend: 2, p2trend: -2})
@@ -164,11 +163,11 @@ function resolveMatch(p1rank, p2rank, result) {
   }
 }
 
-function select(api) {
+function select(api, mapper) {
   return (req, response) => {
     pool.query(`SELECT * FROM ${api}`, (error, results) => {
       if (error) console.error(error)
-      response.status(200).json(results.rows)
+      response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
   }
 }
