@@ -12,7 +12,7 @@ Deployed at https://hiqombo-ladder-be.herokuapp.com/<br />
 /resolvefight<br />
 
 ### Installation
-Tested with node Postgres 11.6<br/ >
+Tested with node Postgres 11.6<br />
 
 Clone repository<br />
 npm install<br />
@@ -29,6 +29,6 @@ DISABLE_SSL=DISABLED<br />
 DATABASE_URL=find this URL at heroku<br />
 DISABLE_SSL=ENABLED<br />
 
-Use these commands to push and pull from/to heroku<br/ >
+Use these commands to push and pull from/to heroku<br />
 $ PGUSER=postgres PGPASSWORD= heroku pg:push database_name postgresql-metric-37880 --app hiqombo-ladder-be<br />
 $ PGUSER=postgres PGPASSWORD= heroku pg:pull postgresql-metric-37880 database_name --app hiqombo-ladder-be
