@@ -2,8 +2,6 @@ DROP TABLE players;
 DROP TABLE schedule;
 DROP TABLE matches;
 
-SET CLIENT_ENCODING TO 'utf8';
-
 CREATE TABLE players (
     id              serial PRIMARY KEY,
     name            text,
