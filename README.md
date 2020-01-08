@@ -31,3 +31,7 @@ DISABLE_SSL=ENABLED<br />
 
 Push to heroku - using .env file aswell<br />
 $ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:push database_name postgresql-flexible-87882 --app hiqombo-ladder-be
+
+### Making backup of production database
+#### Get dynamic Heroku CLI credentials, change date and run
+$ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:pull postgresql-flexible-87882 hiqombo-prod-08-jan-20 --app hiqombo-ladder-be

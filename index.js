@@ -36,6 +36,15 @@ app.post('/schedulefight', (request, response) => {
   })
 })
 
+app.post('/removefight', (request, response) => {
+  console.log('/removefight', request.body)
+
+  const { id } = request.body
+
+  deleteScheduleById(id)
+    .then(() => response.status(200).send())
+})
+
 app.post('/resolvefight', (request, response) => {
   console.log('/resolvefight', request.body)
 
