@@ -34,4 +34,7 @@ $ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:push database_name pos
 
 ### Making backup of production database
 #### Get dynamic Heroku CLI credentials, change date and run
-$ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:pull postgresql-flexible-87882 hiqombo-prod-08-jan-20 --app hiqombo-ladder-be
+$ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:pull postgresql-flexible-87882 hiqombo-prod-08-jan-20-ebba-removed --app hiqombo-ladder-be
+
+### Upload local version
+$ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:push hiqombo-prod postgresql-flexible-87882 --app hiqombo-ladder-be
