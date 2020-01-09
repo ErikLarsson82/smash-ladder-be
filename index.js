@@ -29,6 +29,14 @@ app.post('/schedulefight', (request, response) => {
   console.log('/schedulefight', request.body)
 
   const { p1slug, p2slug, date } = request.body
+  const presql = `SELECT COUNT(*) FROM schedule where p1slug = '${p1slug}' or  p2slug = '${p2slug}' or '${p1slug}' or  p2slug = '${p2slug}'`
+  pool.query(presql, (err, result) => {
+    if (err) console.error(err, result)
+    response.status(201).send()
+    if (results[0] > 0)
+      response.status(205).send()
+        
+    
   const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
   pool.query(sql, (err, result) => {
     if (err) console.error(err, result)
