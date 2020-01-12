@@ -28,6 +28,12 @@ app.post('/schedulefight', schedulefight)
 app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
 
+app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
+app.get('/matches', select('matches'))
+app.get('/schedule', select('schedule'))
+
+app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
+
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
 
@@ -78,13 +84,6 @@ async function resolvefight(request, response) {
   response.status(200).send()
   slack.newResolve(unescape(player1.name), unescape(player2.name), result.filter(x=>x==='p1').length, result.filter(x=>x==='p2').length)
 }
-
-app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
-app.get('/matches', select('matches'))
-app.get('/schedule', select('schedule'))
-
-app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
-
 
 function getSchedule(id) {
   return new Promise((resolve, reject) => {
