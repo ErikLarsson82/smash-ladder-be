@@ -209,6 +209,7 @@ function select(api, mapper) {
 }
 
 function countScheduled(p1slug, p2slug) {
+  console.log(p1slug, p2slug)
   const presql = `SELECT COUNT(*) FROM schedule WHERE p1slug = '${p1slug}' or p2slug = '${p2slug}' or '${p1slug}' or p2slug = '${p2slug}';`
   pool.query(presql, (err, result) => {
     if (err) console.error(err, result)
