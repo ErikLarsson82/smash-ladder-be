@@ -34,13 +34,11 @@ app.post('/schedulefight', (request, response) => {
       const p1name = players[0].name
       const p2name = players[1].name
       
-      const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
-      pool.query(sql, (err, result) => {
-        if (err) console.error(err, result)
-
-        response.status(201).send()
-    	  slack.newChallange(p1name, p2name)
-      })
+      addScheduled({ p1slug, p2slug, date })
+        .then(() => {
+          response.status(201).send()
+      	  slack.newChallange(p1name, p2name)
+        })      
     })
 })
 
@@ -109,6 +107,17 @@ function deleteScheduleById(id) {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM schedule WHERE id = ${id};`, (error, results) => {
       if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+function addScheduled(match) {
+  const { p1slug, p2slug, date } = match
+  const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, result) => {
+      if (err) console.error(err, result)
       resolve()
     })
   })
