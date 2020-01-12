@@ -40,6 +40,10 @@ async function schedulefight(request, response)  {
   const match = request.body
   const { p1slug, p2slug, date } = request.body
 
+  countScheduled(p1slug, p2slug)
+
+  return
+
   const [player1, player2] = await getPlayers(p1slug, p2slug)
 
   await addScheduled(match)
@@ -202,4 +206,14 @@ function select(api, mapper) {
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
   }
+}
+
+function countScheduled(p1slug, p2slug) {
+  const presql = `SELECT COUNT(*) FROM schedule WHERE p1slug = '${p1slug}' or p2slug = '${p2slug}' or '${p1slug}' or p2slug = '${p2slug}';`
+  pool.query(presql, (err, result) => {
+    if (err) console.error(err, result)
+    
+    console.log(result)
+
+  })
 }
