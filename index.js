@@ -26,6 +26,7 @@ app.use(bodyParser.json())
 
 app.post('/schedulefight', schedulefight)
 app.post('/removefight', removefight)
+app.post('/resolvefight', resolvefight)
 
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
@@ -33,12 +34,12 @@ async function schedulefight(request, response)  {
   const match = request.body
   const { p1slug, p2slug, date } = request.body
 
-  const players = await getPlayers(p1slug, p2slug)
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
 
   await addScheduled(match)
   response.status(201).send()
 
-  slack.newChallange(players[0].name, players[1].name)
+  slack.newChallange(unescape(player1.name), unescape(player2.name))
 } 
 
 async function removefight(request, response) {
@@ -48,38 +49,35 @@ async function removefight(request, response) {
   
   const { p1slug, p2slug} = await getSchedule(id)
     
-  await deleteScheduleById(id)
+  await deleteSchedule(id)
   response.status(200).send()
 
   const [player1, player2] = await getPlayers(p1slug, p2slug)
-  slack.canceledChallange(player1.name, player2.name)
+  slack.canceledChallange(unescape(player1.name), unescape(player2.name))
 }
 
-app.post('/resolvefight', (request, response) => {
+async function resolvefight(request, response) {
   console.log('/resolvefight', request.body)
 
-  const { p1slug, p2slug, date, result, id } = request.body
-  
-  getPlayers(p1slug, p2slug)
-    .then(players => {
-      const p1prerank = players[0].rank
-      const p2prerank = players[1].rank
-      const p1name = players[0].name
-      const p2name = players[1].name
-      const { p1trend, p2trend } = resolveMatch(players[0].rank, players[1].rank, result)
+  const match = request.body
+  const { p1slug, p2slug, date, result, id } = match
 
-      Promise.all([
-        deleteScheduleById(id),
-        addMatch({ p1slug, p2slug, date, result, p1trend, p2trend, p1prerank, p2prerank})
-      ].concat( p1trend !== 0
-          ? swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
-          : resetTrends(p1slug, p2slug) ))
-        .then(() => {
-          response.status(200).send()
-          slack.newResolve(p1name,p2name,result.filter(x=>x==='p1').length,result.filter(x=>x==='p2').length)
-        })
-    })
-})
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
+  const p1prerank = player1.rank
+  const p2prerank = player2.rank
+  
+  const { p1trend, p2trend } = await resolveMatch(player1.rank, player2.rank, result)
+
+  await deleteSchedule(id)
+  await addMatch({ p1slug, p2slug, date, result, p1trend, p2trend, p1prerank, p2prerank})
+
+  p1trend !== 0
+    ? await swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
+    : await resetTrends(p1slug, p2slug)
+
+  response.status(200).send()
+  slack.newResolve(unescape(player1.name), unescape(player2.name), result.filter(x=>x==='p1').length, result.filter(x=>x==='p2').length)
+}
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
@@ -98,7 +96,7 @@ function getSchedule(id) {
   })
 }
 
-function deleteScheduleById(id) {
+function deleteSchedule(id) {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM schedule WHERE id = ${id};`, (error, results) => {
       if (error) console.error(error)
