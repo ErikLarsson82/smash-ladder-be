@@ -1,35 +1,26 @@
+require('dotenv').config()
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
-const SlackWebhook = require('slack-webhook')
-require('dotenv').config()
-var slack = ""
+const slack = require('./slack')
+
 const ssl = process.env.DISABLE_SSL === 'DISABLED' ? false : true
-if ("SLACK_CB_URL" in process.env) {
-	slack = new SlackWebhook(process.env.SLACK_CB_URL),{
-  defaults: {
-    username: 'Bot',
-    channel: '#smash-tester',
-    icon_emoji: ':final-smash:'
-  }
-}
-}
+const port = process.env.PORT || 1337
+
 const config = {
   connectionString: process.env.DATABASE_URL,
   ssl: ssl
 }
 
-console.log('config', config, process.env.DISABLE_SSL)
-
 const Pool = require('pg').Pool
 const pool = new Pool(config)
 
 const app = express()
-const port = process.env.PORT || 1337
 
 app.use(cors())
-app.options('*', cors())
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -37,43 +28,51 @@ app.post('/schedulefight', (request, response) => {
   console.log('/schedulefight', request.body)
 
   const { p1slug, p2slug, date } = request.body
-  const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
-  pool.query(sql, (err, result) => {
-    if (err) {
-      console.error(err, result) 
-      response.status(201).send()
-    }
-	else
-        {
-	sendNewChallange(p1slug,p2slug)
-        }
-  })
+
+  getPlayers(p1slug, p2slug)
+    .then(players => {
+      const p1name = players[0].name
+      const p2name = players[1].name
+      
+      const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
+      pool.query(sql, (err, result) => {
+        if (err) console.error(err, result)
+
+        response.status(201).send()
+    	  slack.newChallange(p1name, p2name)
+      })
+    })
 })
 
 app.post('/removefight', (request, response) => {
   console.log('/removefight', request.body)
 
   const { id } = request.body
-  //sendCanceledChallange(player1,player2)
-  deleteScheduleById(id)
-    .then(() => response.status(200).send())
+  
+  findScheduleById(id)
+    .then(({p1slug, p2slug}) => {
+    
+      deleteScheduleById(id)
+      .then(() => {
+        response.status(200).send()
+
+        getPlayers(p1slug, p2slug)
+          .then(players => slack.canceledChallange(players[0].name, players[1].name))
+      })
+    })
 })
 
 app.post('/resolvefight', (request, response) => {
   console.log('/resolvefight', request.body)
 
   const { p1slug, p2slug, date, result, id } = request.body
-  p1score=0;
-  p2score=0;
-  result.forEach(element => { 
-  if(element == "p1") p1score +=1
-  if(element == "p2") p2score +=1
-}); 
-  sendNewResult(p1slug,p2slug,p1score,p2score) 
+  
   getPlayers(p1slug, p2slug)
     .then(players => {
       const p1prerank = players[0].rank
       const p2prerank = players[1].rank
+      const p1name = players[0].name
+      const p2name = players[1].name
       const { p1trend, p2trend } = resolveMatch(players[0].rank, players[1].rank, result)
 
       Promise.all([
@@ -82,7 +81,10 @@ app.post('/resolvefight', (request, response) => {
       ].concat( p1trend !== 0
           ? swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
           : resetTrends(p1slug, p2slug) ))
-        .then(() => response.status(200).send())
+        .then(() => {
+          response.status(200).send()
+          slack.newResolve(p1name,p2name,result.filter(x=>x==='p1').length,result.filter(x=>x==='p2').length)
+        })
     })
 })
 
@@ -194,104 +196,9 @@ function resolveMatch(p1rank, p2rank, result) {
 
 function select(api, mapper) {
   return (req, response) => {
-    pool.query(`SELECT * FROM ${api}`, (error, results) => {
+    pool.query(`SELECT * FROM ${api};`, (error, results) => {
       if (error) console.error(error)
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
   }
 }
-/* Slack integration */
-
-function sendNewChallange(player1,player2) {
-		const messageBody = {
-			"blocks": [
-				{
-					"type": "section",
-					"text": {
-						"type": "mrkdwn",
-						"text": "<!channel>"
-					}
-				},
-				{
-					"type": "section",
-					"text": {
-						"type": "mrkdwn",
-						"text": "Challenge approaching:* " + player1 + "* VERSUS *" +player2 +"*"
-					}
-				}
-			]
-		};
-		if(slack != null)
-			slack.send(messageBody)
-
-	}
-function sendNewResult(player1,player2,score1,score2) {
-		const messageBody = {
-		"blocks": [
-				{
-					"type": "section",
-					"text": {
-						"type": "mrkdwn",
-						"text": "<!channel>"
-					}
-				},	
-			{
-				"type": "section",
-				"text": {
-					"type": "mrkdwn",
-					"text": "A new match result is in."
-				}
-			},
-			{
-				"type": "section",
-				"fields": [
-					{
-						"type": "mrkdwn",
-						"text": "*Players*"
-					},
-					{
-						"type": "mrkdwn",
-						"text": "*Score*"
-					},
-					{
-						"type": "mrkdwn",
-						"text": player1
-					},
-					{
-						"type": "mrkdwn",
-						"text": score1.toString()
-					},
-					{
-						"type": "mrkdwn",
-						"text": player2
-					},
-					{
-						"type": "mrkdwn",
-						"text": score2.toString()
-					}
-				]
-			}
-				
-			]				
-		};
-		if(slack != null)
-			slack.send(messageBody)
-	}
-	function sendCanceledChallange(player1,player2)
-	{
-		const messageBody = {
-			"blocks": [
-				{
-					"type": "section",
-					"text": {
-						"type": "mrkdwn",
-						"text": "The game between ${player1} and ${player2} was canceled"
-					}
-				}
-			]
-		};
-		module.exports.sendSlackMessage($messageBody);
-		if(slack != null)
-			slack.send(messageBody)
-
-	}
