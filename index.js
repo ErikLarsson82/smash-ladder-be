@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.post('/schedulefight', schedulefight)
+app.post('/removefight', removefight)
 
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
@@ -38,41 +39,21 @@ async function schedulefight(request, response)  {
   response.status(201).send()
 
   slack.newChallange(players[0].name, players[1].name)
-  
-  /*
-
-  getPlayers(p1slug, p2slug)
-    .then(players => {
-      const p1name = players[0].name
-      const p2name = players[1].name
-      
-      addScheduled({ p1slug, p2slug, date })
-        .then(() => {
-          response.status(201).send()
-          slack.newChallange(p1name, p2name)
-        })      
-    })
-
-  */
 } 
 
-app.post('/removefight', (request, response) => {
+async function removefight(request, response) {
   console.log('/removefight', request.body)
 
   const { id } = request.body
   
-  findScheduleById(id)
-    .then(({p1slug, p2slug}) => {
+  const { p1slug, p2slug} = await getSchedule(id)
     
-      deleteScheduleById(id)
-      .then(() => {
-        response.status(200).send()
+  await deleteScheduleById(id)
+  response.status(200).send()
 
-        getPlayers(p1slug, p2slug)
-          .then(players => slack.canceledChallange(players[0].name, players[1].name))
-      })
-    })
-})
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
+  slack.canceledChallange(player1.name, player2.name)
+}
 
 app.post('/resolvefight', (request, response) => {
   console.log('/resolvefight', request.body)
@@ -107,7 +88,7 @@ app.get('/schedule', select('schedule'))
 app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
 
 
-function findScheduleById(id) {
+function getSchedule(id) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT * FROM schedule WHERE id = ${id};`
     pool.query(sql, (error, results) => {
