@@ -40,9 +40,13 @@ async function schedulefight(request, response)  {
   const match = request.body
   const { p1slug, p2slug, date } = request.body
 
-  countScheduled(p1slug, p2slug)
+  const count = await countScheduled(p1slug, p2slug)
 
-  return
+  // When match already exists as scheduled
+  if (count > 0) {
+    response.status(200).send()
+    return
+  }
 
   const [player1, player2] = await getPlayers(p1slug, p2slug)
 
@@ -175,6 +179,17 @@ function updatePlayer(slug, rank, trend) {
   })
 }
 
+function countScheduled(p1slug, p2slug) {
+  return new Promise((resolve, reject) => {
+    const presql = `SELECT COUNT(*) FROM schedule WHERE (p1slug = '${p1slug}' AND p2slug = '${p2slug}') or (p1slug = '${p2slug}' AND p2slug = '${p1slug}');`
+    pool.query(presql, (err, result) => {
+      if (err) console.error(err, result)
+      
+      resolve(result.rows[0].count)
+    })
+  })
+}
+
 /* resolveMatch - Determine who trends how */
 // JSON.stringify(resolveMatch(3,5, ['p1', 'p1']) === JSON.stringify({p1trend: 0, p2trend: 0})
 // JSON.stringify(resolveMatch(3,5, ['p2', 'p2']) === JSON.stringify({p1trend: -2, p2trend: 2})
@@ -206,15 +221,4 @@ function select(api, mapper) {
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
   }
-}
-
-function countScheduled(p1slug, p2slug) {
-  console.log(p1slug, p2slug)
-  const presql = `SELECT COUNT(*) FROM schedule WHERE p1slug = '${p1slug}' or p2slug = '${p2slug}' or '${p1slug}' or p2slug = '${p2slug}';`
-  pool.query(presql, (err, result) => {
-    if (err) console.error(err, result)
-    
-    console.log(result)
-
-  })
 }
