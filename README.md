@@ -24,10 +24,12 @@ Deploy to heroku<br />
 #### Local - Create .env file with this content<br />
 DATABASE_URL=localhost<br />
 DISABLE_SSL=DISABLED<br />
+SLACK_CB_URL=url
 
 #### Remote - For connection to remote url<br />
 DATABASE_URL=find this URL at heroku<br />
 DISABLE_SSL=ENABLED<br />
+SLACK_CB_URL=url
 
 Push to heroku - using .env file aswell<br />
 $ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:push database_name postgresql-flexible-87882 --app hiqombo-ladder-be
@@ -38,3 +40,6 @@ $ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:pull postgresql-flexib
 
 ### Upload local version
 $ PGUSER=postgres PGPASSWORD=hej123 PGPORT=2800 heroku pg:push hiqombo-prod postgresql-flexible-87882 --app hiqombo-ladder-be
+
+### Slack integration
+Set the SLACK_CB_URL environment variable to the target channel
