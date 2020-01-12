@@ -1,70 +1,83 @@
+require('dotenv').config()
+
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const fs = require('fs')
-
-require('dotenv').config()
+const slack = require('./slack')
 
 const ssl = process.env.DISABLE_SSL === 'DISABLED' ? false : true
+const port = process.env.PORT || 1337
 
 const config = {
   connectionString: process.env.DATABASE_URL,
   ssl: ssl
 }
 
-console.log('config', config, process.env.DISABLE_SSL)
-
 const Pool = require('pg').Pool
 const pool = new Pool(config)
 
 const app = express()
-const port = process.env.PORT || 1337
 
 app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.post('/schedulefight', (request, response) => {
+app.post('/schedulefight', schedulefight)
+app.post('/removefight', removefight)
+app.post('/resolvefight', resolvefight)
+
+async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
 
+  const match = request.body
   const { p1slug, p2slug, date } = request.body
-  const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
-  pool.query(sql, (err, result) => {
-    if (err) console.error(err, result)
-    response.status(201).send()
-  })
-})
 
-app.post('/removefight', (request, response) => {
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
+
+  await addScheduled(match)
+  response.status(201).send()
+
+  slack.newChallange(unescape(player1.name), unescape(player2.name))
+} 
+
+async function removefight(request, response) {
   console.log('/removefight', request.body)
 
   const { id } = request.body
+  
+  const { p1slug, p2slug} = await getSchedule(id)
+    
+  await deleteSchedule(id)
+  response.status(200).send()
 
-  deleteScheduleById(id)
-    .then(() => response.status(200).send())
-})
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
+  slack.canceledChallange(unescape(player1.name), unescape(player2.name))
+}
 
-app.post('/resolvefight', (request, response) => {
+async function resolvefight(request, response) {
   console.log('/resolvefight', request.body)
 
-  const { p1slug, p2slug, date, result, id } = request.body
+  const match = request.body
+  const { p1slug, p2slug, date, result, id } = match
 
-  getPlayers(p1slug, p2slug)
-    .then(players => {
-      const p1prerank = players[0].rank
-      const p2prerank = players[1].rank
-      const { p1trend, p2trend } = resolveMatch(players[0].rank, players[1].rank, result)
+  const [player1, player2] = await getPlayers(p1slug, p2slug)
+  const p1prerank = player1.rank
+  const p2prerank = player2.rank
+  
+  const { p1trend, p2trend } = await resolveMatch(player1.rank, player2.rank, result)
 
-      Promise.all([
-        deleteScheduleById(id),
-        addMatch({ p1slug, p2slug, date, result, p1trend, p2trend, p1prerank, p2prerank})
-      ].concat( p1trend !== 0
-          ? swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
-          : resetTrends(p1slug, p2slug) ))
-        .then(() => response.status(200).send())
-    })
-})
+  await deleteSchedule(id)
+  await addMatch({ p1slug, p2slug, date, result, p1trend, p2trend, p1prerank, p2prerank})
+
+  p1trend !== 0
+    ? await swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend })
+    : await resetTrends(p1slug, p2slug)
+
+  response.status(200).send()
+  slack.newResolve(unescape(player1.name), unescape(player2.name), result.filter(x=>x==='p1').length, result.filter(x=>x==='p2').length)
+}
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
@@ -73,7 +86,7 @@ app.get('/schedule', select('schedule'))
 app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
 
 
-function findScheduleById(id) {
+function getSchedule(id) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT * FROM schedule WHERE id = ${id};`
     pool.query(sql, (error, results) => {
@@ -83,10 +96,21 @@ function findScheduleById(id) {
   })
 }
 
-function deleteScheduleById(id) {
+function deleteSchedule(id) {
   return new Promise((resolve, reject) => {
     pool.query(`DELETE FROM schedule WHERE id = ${id};`, (error, results) => {
       if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+function addScheduled(match) {
+  const { p1slug, p2slug, date } = match
+  const sql = `INSERT INTO schedule (p1slug, p2slug, date) VALUES ('${p1slug}', '${p2slug}', '${date}');`
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, result) => {
+      if (err) console.error(err, result)
       resolve()
     })
   })
@@ -174,7 +198,7 @@ function resolveMatch(p1rank, p2rank, result) {
 
 function select(api, mapper) {
   return (req, response) => {
-    pool.query(`SELECT * FROM ${api}`, (error, results) => {
+    pool.query(`SELECT * FROM ${api};`, (error, results) => {
       if (error) console.error(error)
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
