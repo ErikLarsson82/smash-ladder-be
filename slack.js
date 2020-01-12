@@ -56,4 +56,20 @@ function canceledChallange(player1,player2) {
 	slack.send(messageBody)
 }
 
-module.exports = { newChallange, newResolve, canceledChallange }
+function announcefight(player1, player2) {
+	if (!slack) return
+	const messageBody = {
+		"blocks": [
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": `Nu startar matchen: ${player1} vs. ${player2}`
+				}
+			}
+		]
+	}
+	slack.send(messageBody)
+}
+
+module.exports = { newChallange, newResolve, canceledChallange, announcefight }

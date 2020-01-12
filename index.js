@@ -27,6 +27,7 @@ app.use(bodyParser.json())
 app.post('/schedulefight', schedulefight)
 app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
+app.post('/announcefight', announcefight)
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
@@ -91,6 +92,12 @@ async function resolvefight(request, response) {
 
   response.status(200).send()
   slack.newResolve(unescape(player1.name), unescape(player2.name), result.filter(x=>x==='p1').length, result.filter(x=>x==='p2').length)
+}
+
+function announcefight(request, response) {
+  const { player1, player2 } = request.body
+  slack.announcefight(player1, player2)
+  response.status(200).send()
 }
 
 function getSchedule(id) {
