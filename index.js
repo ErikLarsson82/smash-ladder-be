@@ -24,10 +24,22 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.post('/schedulefight', (request, response) => {
+app.post('/schedulefight', schedulefight)
+
+async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
 
+  const match = request.body
   const { p1slug, p2slug, date } = request.body
+
+  const players = await getPlayers(p1slug, p2slug)
+
+  await addScheduled(match)
+  response.status(201).send()
+
+  slack.newChallange(players[0].name, players[1].name)
+  
+  /*
 
   getPlayers(p1slug, p2slug)
     .then(players => {
@@ -37,10 +49,12 @@ app.post('/schedulefight', (request, response) => {
       addScheduled({ p1slug, p2slug, date })
         .then(() => {
           response.status(201).send()
-      	  slack.newChallange(p1name, p2name)
+          slack.newChallange(p1name, p2name)
         })      
     })
-})
+
+  */
+} 
 
 app.post('/removefight', (request, response) => {
   console.log('/removefight', request.body)
