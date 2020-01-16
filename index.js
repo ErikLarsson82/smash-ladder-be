@@ -29,11 +29,22 @@ app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
 app.post('/announcefight', announcefight)
 
+app.post('/updateplayer', updateplayer)
+
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
 
 app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
+
+async function updateplayer(request, response) {
+  console.log('/updateplayer', request.body)
+
+  const { playerslug, main, secondary } = request.body
+
+  await updatePlayerIcons(playerslug, main, secondary)
+  response.status(200).send()
+}
 
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
@@ -156,8 +167,8 @@ function getPlayers(p1slug, p2slug) {
 
 function swapRanks({ p1slug, p2slug, p1prerank, p2prerank, p1trend, p2trend }) {
   return Promise.all([
-    updatePlayer(p1slug, p2prerank, p1trend),
-    updatePlayer(p2slug, p1prerank, p2trend)
+    updatePlayerRank(p1slug, p2prerank, p1trend),
+    updatePlayerRank(p2slug, p1prerank, p2trend)
   ])
 }
 
@@ -177,9 +188,20 @@ function updateTrend(slug, trend) {
   })
 }
 
-function updatePlayer(slug, rank, trend) {
+function updatePlayerRank(slug, rank, trend) {
   return new Promise((resolve, reject) => {
     pool.query(`UPDATE players SET rank = ${rank}, trend = ${trend} WHERE playerslug = '${slug}';`, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+const stringValueOrNull = x => x ? `'${x}'` : 'null'
+
+function updatePlayerIcons(slug, main, secondary) {
+  return new Promise((resolve, reject) => {
+    pool.query(`UPDATE players SET main = ${stringValueOrNull(main)}, secondary = ${stringValueOrNull(secondary)} WHERE playerslug = '${slug}';`, (error, results) => {
       if (error) console.error(error)
       resolve()
     })
