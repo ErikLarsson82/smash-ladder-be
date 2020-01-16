@@ -34,7 +34,7 @@ INSERT INTO players (name, playerslug, main, secondary, trend, qc, rank)
 ('Baran Hiwakader', 'baran-hiwakader', 'Ridly', NULL, 0, '{}', 17),
 ('Jonas Johansson', 'jonas-johansson', 'Bowser', 'King K. Rool', 0, '{}', 18),
 ('Stefan Nygren', 'stefan-nygren', 'Palutena', NULL, 0, '{}', 19),
-('Jimmy Hytonen', 'jimmy-hytonen', 'Joker', 'Bowser', 0, '{2}', 20);
+('Jimmy%20Hyt%F6nen', 'jimmy-hytonen', 'Young Link', 'Joker', 0, '{2}', 20);
 
 CREATE TABLE schedule (
     id              serial PRIMARY KEY,
