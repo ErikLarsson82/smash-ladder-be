@@ -54,12 +54,8 @@ async function adminRemovePlayer(request,response)
 	const {key,slug} = request.body
 	const maxRank = await getHighetsRank()
     const player = await getPlayer(slug)
-	await removePlayer()
-	for(var i=player.rank;i <= maxRank; i++)
-	{
-		myPlayer = await getPlayerByRank(i + 1)
-		await updatePlayerRank(myPlayer.playerslug,i,myPlayer.trend)
-	}
+	await removePlayer(slug)
+	await removeGapFix(player.rank)
 	// await cleanScheduledMatches(player.playerslug)
 	// await cleanMatches(player.playerslug)
 		
@@ -92,12 +88,12 @@ function removePlayer(slug) {
   })
 }
 
-function getPlayerByRank(rank) {
+function removeGapFix(rank) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM players WHERE rank = '${rank}';`
+    const sql = `update player SET rank = rank -1 where rank > '${rank}';`
     pool.query(sql, (error, results) => {
       if (error) console.error(error)
-      resolve(results.rows[0])
+      resolve()
     })
   })
 }
