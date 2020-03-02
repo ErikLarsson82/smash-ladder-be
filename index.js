@@ -28,12 +28,14 @@ app.post('/schedulefight', schedulefight)
 app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
 app.post('/announcefight', announcefight)
-
+app.post('/admin/removePlayer',adminRemovePlayer);
+//app.post('/admin/addPlayer',adminAddPlayer);
 app.post('/updateplayer', updateplayer)
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
+
 
 app.listen(port, () => console.log(`Smash ladder BE started - listening on port ${port}`))
 
@@ -46,6 +48,29 @@ async function updateplayer(request, response) {
   response.status(200).send()
 }
 
+async function adminRemovePlayer(request,response)
+{
+	console.log('/admin/RemovePlayer',request.body)
+	const {key,slug} = request.body
+	const maxRanks = await maxRank()
+    console.log('/admin/RemovePlayer MAX',maxRanks)
+	response.status(200).send()
+}
+
+//async function adminAddPlayer(request,response)
+//{
+//	
+//}
+function maxRank() {
+  return new Promise((resolve, reject) => {
+    const presql = `SELECT MAX(rank) FROM players;`
+    pool.query(presql, (err, result) => {
+      if (err) console.error(err, result)
+      
+      resolve(result.rows[0].max)
+    })
+  })
+}
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
 
