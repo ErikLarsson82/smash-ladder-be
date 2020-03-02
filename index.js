@@ -52,8 +52,17 @@ async function adminRemovePlayer(request,response)
 {
 	console.log('/admin/RemovePlayer',request.body)
 	const {key,slug} = request.body
-	const maxRanks = await maxRank()
-    console.log('/admin/RemovePlayer MAX',maxRanks)
+	const maxRank = await getHighetsRank()
+    const player = await getPlayer(slug)
+	await removePlayer()
+	for(var i=player.rank;i <= maxRank; i++)
+	{
+		myPlayer = await getPlayerByRank(i + 1)
+		await updatePlayerRank(myPlayer.playerslug,i,myPlayer.trend)
+	}
+	// await cleanScheduledMatches(player.playerslug)
+	// await cleanMatches(player.playerslug)
+		
 	response.status(200).send()
 }
 
@@ -61,7 +70,7 @@ async function adminRemovePlayer(request,response)
 //{
 //	
 //}
-function maxRank() {
+function getHighetsRank() {
   return new Promise((resolve, reject) => {
     const presql = `SELECT MAX(rank) FROM players;`
     pool.query(presql, (err, result) => {
@@ -71,6 +80,48 @@ function maxRank() {
     })
   })
 }
+
+function removePlayer(slug) {
+
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM players WHERE playerslug = '${slug}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+function getPlayerByRank(rank) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM players WHERE rank = '${rank}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve(results.rows[0])
+    })
+  })
+}
+
+function cleanScheduledMatches(slug) {
+  return new Promise((resolve, reject) => {
+  const sql = `Delete FROM schedule WHERE p1slug = '${slug}' or p2slug = '${slug}'';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+function cleanScheduledMatches(slug) {
+  return new Promise((resolve, reject) => {
+  const sql = `Delete FROM matches WHERE p1slug = '${slug}' or p2slug = '${slug}'';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)
 
