@@ -96,7 +96,7 @@ function removePlayer(slug) {
 
 function removeGapFix(rank) {
   return new Promise((resolve, reject) => {
-    const sql = `update player SET rank = rank -1 where rank > ${rank};`
+    const sql = `update players SET rank = rank -1 where rank > ${rank};`
 	console.log("WHAT HAPPENED????",sql)
     pool.query(sql, (error, results) => {
       if (error) console.error(error)
