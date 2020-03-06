@@ -29,7 +29,6 @@ app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
 app.post('/announcefight', announcefight)
 app.post('/admin/removePlayer',adminRemovePlayer);
-//app.post('/admin/addPlayer',adminAddPlayer);
 app.post('/updateplayer', updateplayer)
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
@@ -61,10 +60,6 @@ async function adminRemovePlayer(request,response)
 	response.status(200).send()
 }
 
-//async function adminAddPlayer(request,response)
-//{
-//	
-//}
 function getHighetsRank() {
   return new Promise((resolve, reject) => {
     const presql = `SELECT MAX(rank) FROM players;`
