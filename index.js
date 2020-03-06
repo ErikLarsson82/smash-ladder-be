@@ -47,17 +47,17 @@ async function updateplayer(request, response) {
   response.status(200).send()
 }
 
-async function adminRemovePlayer(request,response)
-{
+async function adminRemovePlayer(request,response){
 	console.log('/admin/RemovePlayer',request.body)
 	const {key,slug} = request.body
 	const maxRank = await getHighetsRank()
 	const player = await getPlayer(slug)
 	await removePlayer(slug)
 	await removeGapFix(player.rank)
-	console.log('/admin/RemovePlayer'," await removeGapFix DONE")
-	console.log('/admin/RemovePlayer',request.body)
+    await removePlayerSchedules(slug)
+	await removePlayerMatches(slug)
 	response.status(200).send()
+	slack.deletedPlayer(player.name)
 }
 
 function getHighetsRank() {
@@ -70,7 +70,27 @@ function getHighetsRank() {
     })
   })
 }
+function removePlayerSchedules(slug) {
 
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM schedule WHERE p1slug = '${slug}' or p2slug = '${slug}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
+
+function removePlayerMatches(slug) {
+
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM matches WHERE p1slug = '${slug}' or p2slug = '${slug}';`
+    pool.query(sql, (error, results) => {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
+}
 function removePlayer(slug) {
 
   return new Promise((resolve, reject) => {
