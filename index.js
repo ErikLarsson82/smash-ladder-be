@@ -8,11 +8,13 @@ const slack = require('./slack')
 
 const ssl = process.env.DISABLE_SSL === 'DISABLED' ? false : true
 const port = process.env.PORT || 1337
-
+const admin_password = process.env.ADMIN_PASSWORD || "HelloDarknessMyOldFriend"
 const config = {
   connectionString: process.env.DATABASE_URL,
   ssl: ssl
 }
+
+
 
 const Pool = require('pg').Pool
 const pool = new Pool(config)
@@ -28,7 +30,7 @@ app.post('/schedulefight', schedulefight)
 app.post('/removefight', removefight)
 app.post('/resolvefight', resolvefight)
 app.post('/announcefight', announcefight)
-app.post('/admin/removePlayer',adminRemovePlayer);
+app.post('/admin/disablePlayer',adminDisablePlayer);
 app.post('/updateplayer', updateplayer)
 
 app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
@@ -47,17 +49,21 @@ async function updateplayer(request, response) {
   response.status(200).send()
 }
 
-async function adminRemovePlayer(request,response){
+async function adminDisablePlayer(request,response){
 	console.log('/admin/RemovePlayer',request.body)
 	const {key,slug} = request.body
-	const maxRank = await getHighetsRank()
-	const player = await getPlayer(slug)
-	await removePlayer(slug)
-	await removeGapFix(player.rank)
-    await removePlayerSchedules(slug)
-	await removePlayerMatches(slug)
-	response.status(200).send()
-	slack.deletedPlayer(player.name)
+	if ( key == admin_password) {
+		const maxRank = await getHighetsRank()
+		const player = await getPlayer(slug)
+		await deactivatePlayer(slug)
+		await removeGapFix(player.rank)
+		await removePlayerSchedules(slug)
+		response.status(200).send()
+		slack.deletedPlayer(player.name)
+	} else {
+		response.status(403).send()
+		response.send({reason:"Where'dya think you're going tiger"});
+	}
 }
 
 function getHighetsRank() {
@@ -81,20 +87,10 @@ function removePlayerSchedules(slug) {
   })
 }
 
-function removePlayerMatches(slug) {
+function deactivatePlayer(slug) {
 
   return new Promise((resolve, reject) => {
-    const sql = `DELETE FROM matches WHERE p1slug = '${slug}' or p2slug = '${slug}';`
-    pool.query(sql, (error, results) => {
-      if (error) console.error(error)
-      resolve()
-    })
-  })
-}
-function removePlayer(slug) {
-
-  return new Promise((resolve, reject) => {
-    const sql = `DELETE FROM players WHERE playerslug = '${slug}';`
+    const sql = `update players set active = false, rank = 0 where  playerslug = '${slug}';`
     pool.query(sql, (error, results) => {
       if (error) console.error(error)
       resolve()
@@ -112,25 +108,6 @@ function removeGapFix(rank) {
   })
 }
 
-function cleanScheduledMatches(slug) {
-  return new Promise((resolve, reject) => {
-  const sql = `Delete FROM schedule WHERE p1slug = '${slug}' or p2slug = '${slug}'';`
-    pool.query(sql, (error, results) => {
-      if (error) console.error(error)
-      resolve()
-    })
-  })
-}
-
-function cleanScheduledMatches(slug) {
-  return new Promise((resolve, reject) => {
-  const sql = `Delete FROM matches WHERE p1slug = '${slug}' or p2slug = '${slug}'';`
-    pool.query(sql, (error, results) => {
-      if (error) console.error(error)
-      resolve()
-    })
-  })
-}
 
 async function schedulefight(request, response)  {
   console.log('/schedulefight', request.body)

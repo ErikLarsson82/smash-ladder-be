@@ -10,7 +10,8 @@ CREATE TABLE players (
     secondary       text,
     trend           integer,
     qc              integer[],
-    rank            integer
+    rank            integer,
+	active          boolean DEFAULT true
 );
 
 INSERT INTO players (name, playerslug, main, secondary, trend, qc, rank)
