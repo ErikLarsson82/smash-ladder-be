@@ -306,9 +306,9 @@ function resolveMatch(p1rank, p2rank, result) {
   }
 }
 
-function select(api, mapper) {
+function select(api, mapper,extra="") { 
   return (req, response) => {
-    pool.query(`SELECT * FROM ${api};`, (error, results) => {
+    pool.query(`SELECT * FROM ${api} ${extra};`, (error, results) => {
       if (error) console.error(error)
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
