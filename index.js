@@ -33,7 +33,7 @@ app.post('/announcefight', announcefight)
 app.post('/admin/disablePlayer',adminDisablePlayer);
 app.post('/updateplayer', updateplayer)
 
-app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
+app.get('/players', select('players', x => ({...x, name: unescape(x.name) }),'where active=true'))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
 
@@ -306,9 +306,14 @@ function resolveMatch(p1rank, p2rank, result) {
   }
 }
 
-function select(api, mapper,extra="") { 
+function select(api, mapper,extra) { 
+  if(extra === undefined) {
+  	extra = "";
+  }else {
+  	extra = " " + extra
+  }
   return (req, response) => {
-    pool.query(`SELECT * FROM ${api} ${extra};`, (error, results) => {
+    pool.query(`SELECT * FROM ${api}${extra};`, (error, results) => {
       if (error) console.error(error)
       response.status(200).json(results.rows.map(mapper ? mapper : x=>x))
     })
