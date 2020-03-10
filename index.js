@@ -33,7 +33,7 @@ app.post('/announcefight', announcefight)
 app.post('/admin/disablePlayer',adminDisablePlayer);
 app.post('/updateplayer', updateplayer)
 
-app.get('/players', select('players', x => ({...x, name: unescape(x.name) }),'where active=true'))
+app.get('/players', select('players', x => ({...x, name: unescape(x.name) })))
 app.get('/matches', select('matches'))
 app.get('/schedule', select('schedule'))
 
