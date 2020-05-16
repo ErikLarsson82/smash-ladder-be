@@ -23,6 +23,23 @@ function newChallange(player1,player2) {
 	slack.send(messageBody)
 }
 
+function deletedPlayer(player) {
+	if (!slack) return
+
+	const messageBody = {
+		"blocks": [
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": `${player} har valt att lämna stegen :(`
+				}
+			}
+		]
+	}
+	slack.send(messageBody)
+}
+
 function newResolve(player1,player2,score1,score2) {
 	if (!slack) return
 
@@ -72,4 +89,4 @@ function announcefight(player1, player2) {
 	slack.send(messageBody)
 }
 
-module.exports = { newChallange, newResolve, canceledChallange, announcefight }
+module.exports = { newChallange, newResolve, canceledChallange, announcefight, deletedPlayer }
